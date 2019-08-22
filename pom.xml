@@ -52,6 +52,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.9.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -59,6 +69,41 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<!-- openapi-generator maven -->
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<version>3.3.4</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/api/basic-blog.yml</inputSpec>
+							<generatorName>spring</generatorName>
+							<apiPackage>com.github.achawla.blog.generated.api</apiPackage>
+							<modelPackage>com.github.achawla.blog.generated.dto</modelPackage>
+							<invokerPackage>com.github.achawla.blog.generated.invoker</invokerPackage>
+							<modelNameSuffix>DTO</modelNameSuffix>
+							<supportingFilesToGenerate>ApiUtil.java,OpenAPIDocumentationConfig.java</supportingFilesToGenerate>
+							<generateModelTests>false</generateModelTests>
+							<generateApiTests>false</generateApiTests>
+							<library>spring-boot</library>
+							<configOptions>
+								<configPackage>com.github.achawla.blog.generated.config</configPackage>
+								<dateLibrary>java8</dateLibrary>
+								<java8>true</java8>
+								<delegatePattern>true</delegatePattern>
+								<useBeanValidation>true</useBeanValidation>
+								<useOptional>true</useOptional>
+							</configOptions>
+							<output>${project.build.directory}/generated-sources</output>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

@@ -1,0 +1,120 @@
+openapi: 3.0.2
+info:
+  title: Blog Service
+  description: Service for managing blogs.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+paths:
+  /basic-blog/blogs/:
+    get:
+      description: Get all the blogs.
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blogs'
+      operationId: read
+
+    post:
+      description: Create a new Blog.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Blog'
+      responses:
+        201:
+          description: created successfully.
+
+        400:
+          description: bad Blog creation request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      operationId: create
+
+  /basic-blog/blog/{Id}:
+    put:
+      description: Update existing Blog.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Blog'
+      parameters:
+        - in: path
+          name: Id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        200:
+          description: successful update
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blog'
+        400:
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    Blogs:
+      type: array
+      items:
+        $ref: '#/components/schemas/Blog'
+    Blog:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        mdContents:
+          type: string
+        title:
+          type: string
+        timeCreated:
+          type: string
+          format: date-time
+        timeUpdated:
+          type: string
+          format: date-time
+        fileType:
+          type: string
+          enum:
+            - BLOG
+            - NOTES
+    ErrorResponse:
+      description: Error response
+      type: object
+      properties:
+        message:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              fieldName:
+                type: string
+              description:
+                type: string
+
+
+
+
+
+

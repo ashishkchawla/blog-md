@@ -3,7 +3,9 @@ package com.github.achawla.blog.service;
 import org.commonmark.node.*;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
+import org.springframework.stereotype.Service;
 
+@Service
 public class MarkdownToHTML {
 
 
