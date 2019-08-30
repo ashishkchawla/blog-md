@@ -45,6 +45,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Blog'
+      operationId: update
       parameters:
         - in: path
           name: Id
@@ -112,9 +113,3 @@ components:
                 type: string
               description:
                 type: string
-
-
-
-
-
-
