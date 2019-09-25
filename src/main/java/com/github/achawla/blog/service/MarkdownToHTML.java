@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class MarkdownToHTML {
 
 
-    public String convertMDToHTML(String input){
+    public static String convertMDToHTML(String input){
 
 
         Parser parser = Parser.builder().build();

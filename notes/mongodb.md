@@ -18,3 +18,7 @@ In Bash shell, type mongo to nter mongo shell
 
 
 * Mongo Commands
+
+1. use <db_name>: connects to database
+2. 
+

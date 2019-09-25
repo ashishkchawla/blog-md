@@ -16,7 +16,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Blogs'
-      operationId: read
+      operationId: list
 
     post:
       description: Create a new Blog.
@@ -38,6 +38,24 @@ paths:
       operationId: create
 
   /basic-blog/blog/{Id}:
+    get:
+      description: Get the blog using it's corresponding id.
+      responses:
+        200:
+          description: blog found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Blog'
+        404:
+          description: blog not found.
+      operationId: read
+      parameters:
+        - in: path
+          name: Id
+          required: true
+          schema:
+            type: string
     put:
       description: Update existing Blog.
       requestBody:
@@ -76,8 +94,7 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          format: int32
+          type: string
         name:
           type: string
         mdContents:
