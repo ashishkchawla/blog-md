@@ -5,7 +5,7 @@ import com.github.achawla.blog.model.MdFile;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+@Mapper//(nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
 public interface MdFileToBlogDTO {
 
     MdFileToBlogDTO MAPPER = Mappers.getMapper(MdFileToBlogDTO.class);

@@ -1,12 +1,13 @@
 package com.github.achawla.blog.service;
 
+import com.github.achawla.blog.exception.BlogNotFoundException;
 import com.github.achawla.blog.generated.api.BasicBlogApiDelegate;
 import com.github.achawla.blog.generated.dto.BlogDTO;
 import com.github.achawla.blog.mapper.BlogDTOToMdFile;
 import com.github.achawla.blog.model.MdFile;
 import com.github.achawla.blog.model.MdFileType;
 import com.github.achawla.blog.repository.MdFileRepository;
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -70,9 +73,8 @@ class BasicBlogApiDelegateImplTest {
 
         ResponseEntity<List<BlogDTO>> responseEntity = basicBlogApiDelegate.list();
 
-        assertThat(responseEntity.getStatusCode().equals(HttpStatus.OK));
-        assertThat(responseEntity.getBody().get(0).getName().equals("testing"));
-        assertThat(responseEntity.getBody().get(0).getMdContents().equals("<h2>this is sample text</h2>"));
+        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
+        assertTrue(responseEntity.getBody().get(0).getName().equals("testing"));
 
     }
 
@@ -82,9 +84,9 @@ class BasicBlogApiDelegateImplTest {
         when(mdFileRepository.findById("101")).thenReturn(Optional.of(mdFile));
 
         ResponseEntity<BlogDTO> responseEntity = basicBlogApiDelegate.read("101");
-        assertThat(responseEntity.getStatusCode().equals(HttpStatus.OK));
-        assertThat(responseEntity.getBody().getName().equals("testing"));
-        assertThat(responseEntity.getBody().getMdContents().equals("<h2>this is sample text</h2>"));
+        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
+        assertTrue(responseEntity.getBody().getName().equals("testing"));
+        assertTrue(responseEntity.getBody().getMdContents().contains("<h2>this is sample text</h2>"));
 
 
     }
@@ -97,6 +99,32 @@ class BasicBlogApiDelegateImplTest {
 
         ResponseEntity<Void> createResponse = basicBlogApiDelegate.create(blogDTO);
 
-        assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertTrue(createResponse.getStatusCode().equals(HttpStatus.CREATED));
     }
+
+    @Test
+    void givenInValidBlogId_whenCallingUpdateMethod_thenReturn400InvalidRequest(){
+        when(mdFileRepository.findById("101")).thenReturn(Optional.empty());
+
+        assertThrows(BlogNotFoundException.class, () -> basicBlogApiDelegate.update("101", blogDTO));
+    }
+
+    @Test
+    void givenValidBlogId_whenCallingUpdateMethod_thenReturn200BlogUpdated(){
+        when(mdFileRepository.findById("101")).thenReturn(Optional.of(mdFile));
+
+        ResponseEntity<BlogDTO> responseEntity = basicBlogApiDelegate.update("101", blogDTO);
+        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
+        assertTrue(responseEntity.getBody().getName().equals("testing"));
+    }
+
+    @Test
+    void givenValidBlogId_whenCallingDeleteMethod_thenReturn202Deleted(){
+        doNothing().when(mdFileRepository).deleteById("101");
+
+        ResponseEntity<Void> responseEntity = basicBlogApiDelegate.delete("101");
+        assertTrue(responseEntity.getStatusCode().equals(HttpStatus.ACCEPTED));
+
+    }
+
 }

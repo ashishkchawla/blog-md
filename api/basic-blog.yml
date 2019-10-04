@@ -84,6 +84,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      description: Delete existing Blog.
+      responses:
+        202:
+          description: blog deleted.
+        404:
+          description: blog not found.
+      operationId: delete
+      parameters:
+        - in: path
+          name: Id
+          required: true
+          schema:
+            type: string
 components:
   schemas:
     Blogs:

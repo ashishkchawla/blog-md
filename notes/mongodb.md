@@ -14,7 +14,7 @@ docker run -it -d -p 27017:27017 --name mongo-server mongo
 docker exec -it mongo-server bash
 '''
 
-In Bash shell, type mongo to nter mongo shell
+In Bash shell, type mongo to enter mongo shell
 
 
 * Mongo Commands

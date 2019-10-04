@@ -28,7 +28,7 @@ public class BlogSevice {
     public List<BlogDTO> listAllBlogs(){
         List<MdFile> listMdFile = mdFileRepository.findAll();
         List<BlogDTO> listBlogs = new ArrayList<>();
-        listMdFile.stream().forEach(mdFile -> listBlogs.add(MdFileToBlogDTO.MAPPER.map(mdFile)));
+        listMdFile.stream().forEach(mdFile -> listBlogs.add(new BlogDTO().title(mdFile.getTitle()).name(mdFile.getName())));
         return listBlogs;
     }
 
@@ -43,6 +43,24 @@ public class BlogSevice {
         } else {
             return null;
         }
+    }
+
+    public BlogDTO update(String id, BlogDTO blogDTO){
+        Optional<MdFile> optionalMdFile = mdFileRepository.findById(id);
+
+        if (optionalMdFile.isPresent()) {
+            MdFile mdFile = BlogDTOToMdFile.MAPPER.map(blogDTO);
+
+            mdFileRepository.save(mdFile);
+            return MdFileToBlogDTO.MAPPER.map(mdFile);
+
+        }
+
+        return null;
+    }
+
+    public void deleteBlog(String id){
+        mdFileRepository.deleteById(id);
     }
 
 

@@ -1,5 +1,6 @@
 package com.github.achawla.blog.service;
 
+import com.github.achawla.blog.exception.BlogNotFoundException;
 import com.github.achawla.blog.generated.api.BasicBlogApiDelegate;
 import com.github.achawla.blog.generated.dto.BlogDTO;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Component
@@ -25,7 +27,6 @@ public class BasicBlogApiDelegateImpl implements BasicBlogApiDelegate {
 
         ResponseEntity<Void> responseEntity = ResponseEntity.status(HttpStatus.CREATED).build();
         return responseEntity;
-
     }
 
     @Override
@@ -48,8 +49,23 @@ public class BasicBlogApiDelegateImpl implements BasicBlogApiDelegate {
         }
         ResponseEntity<BlogDTO> responseEntity = ResponseEntity.ok(blogDTO);
         return responseEntity;
-
     }
 
+    @Override
+    public ResponseEntity<BlogDTO> update(String id, BlogDTO blogDTO) {
 
+        blogDTO = blogSevice.update(id, blogDTO);
+
+        if(blogDTO == null){
+            throw new BlogNotFoundException("Blog not found with id- "+id);
+        }
+        return ResponseEntity.ok(blogDTO);
+    }
+
+    @Override
+    public ResponseEntity<Void> delete(String id) {
+        blogSevice.deleteBlog(id);
+
+        return ResponseEntity.accepted().build();
+    }
 }
