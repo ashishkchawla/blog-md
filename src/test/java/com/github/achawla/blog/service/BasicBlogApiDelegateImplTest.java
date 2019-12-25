@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -36,6 +37,9 @@ class BasicBlogApiDelegateImplTest {
 
     @Mock
     private MdFileRepository mdFileRepository;
+
+    @Mock
+    private SequenceGeneratorService sequenceGeneratorService;
 
     @InjectMocks
     private BlogSevice blogSevice;
@@ -81,9 +85,9 @@ class BasicBlogApiDelegateImplTest {
     @Test
     void givenExistingBlogNumber_whenCallingReadMethod_thenReturnValidBlogDTO(){
 
-        when(mdFileRepository.findById("101")).thenReturn(Optional.of(mdFile));
+        when(mdFileRepository.findByName("test-blog")).thenReturn(Arrays.asList(mdFile));
 
-        ResponseEntity<BlogDTO> responseEntity = basicBlogApiDelegate.read("101");
+        ResponseEntity<BlogDTO> responseEntity = basicBlogApiDelegate.read("test-blog");
         assertTrue(responseEntity.getStatusCode().equals(HttpStatus.OK));
         assertTrue(responseEntity.getBody().getName().equals("testing"));
         assertTrue(responseEntity.getBody().getMdContents().contains("<h2>this is sample text</h2>"));
@@ -96,7 +100,7 @@ class BasicBlogApiDelegateImplTest {
 
         MdFile mdFile = BlogDTOToMdFile.MAPPER.map(blogDTO);
         when(mdFileRepository.save(mdFile)).thenReturn(mdFile);
-
+        when(sequenceGeneratorService.generateSequence(anyString())).thenReturn(101l);
         ResponseEntity<Void> createResponse = basicBlogApiDelegate.create(blogDTO);
 
         assertTrue(createResponse.getStatusCode().equals(HttpStatus.CREATED));

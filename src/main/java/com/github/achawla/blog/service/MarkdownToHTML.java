@@ -11,10 +11,9 @@ public class MarkdownToHTML {
 
     public static String convertMDToHTML(String input){
 
-
         Parser parser = Parser.builder().build();
         Node document = parser.parse(input);
-        HtmlRenderer renderer = HtmlRenderer.builder().build();
+        HtmlRenderer renderer = HtmlRenderer.builder().softbreak("<br/>").build();
         return renderer.render(document);  // "<p>This is <em>Sparta</em></p>\n"
     }
 }

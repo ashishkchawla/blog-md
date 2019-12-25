@@ -37,9 +37,9 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       operationId: create
 
-  /basic-blog/blog/{Id}:
+  /basic-blog/blog/{name}:
     get:
-      description: Get the blog using it's corresponding id.
+      description: Get the blog using it's corresponding name/SEO-keyword.
       responses:
         200:
           description: blog found.
@@ -52,10 +52,11 @@ paths:
       operationId: read
       parameters:
         - in: path
-          name: Id
+          name: name
           required: true
           schema:
             type: string
+  /basic-blog/blog/{Id}:
     put:
       description: Update existing Blog.
       requestBody:

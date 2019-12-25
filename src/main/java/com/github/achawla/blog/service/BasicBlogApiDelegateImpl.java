@@ -41,8 +41,8 @@ public class BasicBlogApiDelegateImpl implements BasicBlogApiDelegate {
     }
 
     @Override
-    public ResponseEntity<BlogDTO> read(String id) {
-        BlogDTO blogDTO = blogSevice.readBlog(id);
+    public ResponseEntity<BlogDTO> read(String name) {
+        BlogDTO blogDTO = blogSevice.findBlogByName(name);
 
         if(blogDTO == null){
             throw new NoSuchElementException();
